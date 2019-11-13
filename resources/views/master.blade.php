@@ -13,14 +13,13 @@
 
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
-  <title>Hệ thống quản lý hội</title>
+  <title>Hệ thống báo cáo cải cách</title>
   <base href="{{asset('')}}">
   <script src="public/admin/vendors/jquery/dist/jquery.min.js"></script>
   <script src="public/canvasjs.min.js"></script>
   <script src="public/js/jquery-1.9.1.js"></script>
   <script src="public/js/jquery-ui.js"></script>
   <script src="public/js/bootstrap3-typeahead.min.js"></script>
-
 
   <!-- Bootstrap -->
   <link href="public/admin/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -38,7 +37,6 @@
   <!-- bootstrap-daterangepicker -->
   <link href="public/admin/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 
-
   <!-- Custom Theme Style -->
   <link href="public/admin/build/css/custom.min.css" rel="stylesheet">
   <link href="public/admin/build/css/style.css" rel="stylesheet">
@@ -51,14 +49,17 @@
   <div class="container body">
     <div class="main_container">
       @include('header')
+
+      @include('slidebar')
+
       <!-- page content -->
       <div class="right_col">
         <!-- top tiles -->
         @yield('content')
       </div>
       <!-- /page content -->
-      @include('footer')
 
+      @include('footer')
 
     </div>
   </div>
