@@ -20,12 +20,10 @@ class CheckAdmin
     {
         
         if(Auth::check()){
-            if(Session::get('userrole')==0){
+            if(Session::get('userrole')==1){
                 return $next($request);
-
             }
             return redirect()->route('admin.home');
-
          }else{
             return redirect()->route('loginn');
 

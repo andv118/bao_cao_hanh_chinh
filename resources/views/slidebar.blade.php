@@ -42,10 +42,10 @@
                     <!-- End Quản lý danh mục hệ thống -->
 
                     <!-- Quản lý người dùng -->
-                    @if(Session::get('userrole')==0)
+                    @if(Session::get('userrole')==1)
                     <li><a><i class="fas fa-user"></i> Quản lý người dùng <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="#">Quản lý nhóm người dùng</a></li>
+                            <li><a href="{{Route('admin.account.manageGroupAccount')}}">Quản lý nhóm người dùng</a></li>
                             <li><a href="{{Route('admin.account.manageAccount')}}">Quản lý người dùng</a></li>
                         </ul>
                     </li>
@@ -53,7 +53,7 @@
                     <!-- End Quản lý người dùng -->
 
                     <!-- Quản lý mẫu báo cáo -->
-                    <li><a><i class="fas fa-tasks"></i> Quản lý mẫu báo cáo</a></li>
+                    <li><a href="{{Route('admin.modelReport')}}"><i class="fas fa-tasks"></i> Quản lý mẫu báo cáo</a></li>
                     <!-- End Quản lý mẫu báo cáo -->
 
                     <!-- Quản lý báo cáo -->
