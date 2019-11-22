@@ -1,9 +1,12 @@
-
+    .table-responsive{
+        overflow-x: unset;
+    }
     .table-responsive .table tr td{
         overflow-x: auto;
         min-width: 150px;
         max-width: 150px;
         text-align: center;
+        vertical-align: middle;
     }
     .table-responsive .table tr td::-webkit-scrollbar{
         display: none;
@@ -26,6 +29,22 @@
 .tile_count .tile_stats_count, ul.quick-list li{
     white-space: unset;
 }
+.mgb_30{
+    margin-bottom: 30px;
+}
+.text_left{
+    text-align: left !important;
+    line-height: 23px;
+}
+select{
+    height: 30px;
+    padding: 0 10px;
+}
+
+textarea{
+    width: 100%;
+}
+
 @media (min-width: 768px){
     .tile_count .tile_stats_count span {
         height: 36px;

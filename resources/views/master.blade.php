@@ -104,7 +104,8 @@
 
   <!-- Custom Theme Scripts -->
   <script src="public/admin/build/js/custom.min.js"></script>
-
+  <script src="public/admin/build/js/admin.js"></script>
+  <script src="public/ckeditor/ckeditor.js"></script>
 </body>
 
 </html>

@@ -8,6 +8,7 @@ Route::get('dang-xuat', ['as' => 'logout', 'uses' => 'UserController@logout']);
 Route::get('sendmail', ['as' => 'sendmail', 'uses' => 'BaseController@sendmail']);
 Route::get('/khao-sat', ['as' => 'khaosat', 'uses' => 'UserController@khaosat']);
 
+
 Route::group(['prefix' => '/danh-muc', 'as' => 'admin.', 'middleware' => ['checkLogin']], function () {
        Route::get('trang-chu', 'BaseController@home')->name('home');
 
@@ -67,6 +68,28 @@ Route::group(['prefix' => '/danh-muc', 'as' => 'admin.', 'middleware' => ['check
               Route::get('danh-muc-quan-huyen', 'DanhmucController@danhmucquanhuyen')->name('danhmucquanhuyen');
               Route::get('danh-muc-xa-phuong', 'DanhmucController@danhmucxaphuong')->name('danhmucxaphuong');
               Route::get('cau-hinh-he-thong', 'DanhmucController@cauhinh')->name('cauhinh');
+              Route::get('danh-muc-hanh-chinh', 'DanhmucController@danhMucHanhChinh')->name('danhMucHanhChinh');
+              Route::get('chi-tiet-danh-muc-hanh-chinh/{id}', 'DanhmucController@ChiTietDanhMucHanhChinh')->name('ChiTietDanhMucHanhChinh');
+
+              
+
+              Route::get('them-moi-tieu-chi', 'DanhmucController@ThemMoiTieuChi')->name('themmoitieuchi');
+
+              Route::post('them-moi-tieu-chi', 'DanhmucController@LuuTieuChi')->name('luutieuchi');
+
+              Route::get('danh-muc-tieu-chi', 'DanhmucController@DanhMucTieuChi')->name('danhMucTieuChi');
+
+              Route::get('danh-sach-tieu-chi', 'DanhmucController@DanhSachTieuChi')->name('danhSachTieuChi');
+
+              Route::get('sua-tieu-chi/{id}', 'DanhmucController@SuaTieuChi')->name('SuaTieuChi');
+              Route::post('sua-tieu-chi', ['as'=>'UpdateTieuChi','uses'=>'DanhmucController@UpdateTieuChi']);
+
+              Route::get('xoa-tieu-chi/{id}', 'DanhmucController@XoaTieuChi')->name('XoaTieuChi');
+              Route::post('them-moi-danh-muc', 'DanhmucController@ThemDanhMuc')->name('ThemDanhMuc');
+              Route::get('sua-danh-muc-tieu-chi/{id}', 'DanhmucController@SuaDanhMucTieuChi')->name('SuaDanhMucTieuChi');
+              Route::post('sua-danh-muc-tieu-chi', 'DanhmucController@PostSuaDanhMucTieuChi')->name('PostSuaDanhMucTieuChi');
+
+              
        });
        //Thống kê pháp nhân
        Route::group(['prefix' => '/thong-ke-phap-nhan'], function () {

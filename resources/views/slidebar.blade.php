@@ -36,7 +36,9 @@
                     <li><a><i class="fab fa-centos"></i> Danh mục hệ thống <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a href="#">Đơn vị tính</a></li>
-                            <li><a href="#">Danh mục hành chính </a></li>
+                            <li><a href="{{route('admin.danhMucTieuChi')}}">Danh mục tiêu chí</a></li>
+                            <li><a href="{{route('admin.danhSachTieuChi')}}">Tiêu chí</a></li>
+                            <li><a href="{{route('admin.danhMucHanhChinh')}}">Danh mục hành chính </a></li>
                         </ul>
                     </li>
                     <!-- End Quản lý danh mục hệ thống -->
