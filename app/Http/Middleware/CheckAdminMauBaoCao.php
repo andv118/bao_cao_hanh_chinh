@@ -7,7 +7,7 @@ use Closure;
 use Auth;
 use Session;
 
-class CheckAdmin
+class CheckAdminMauBaoCao
 {
     /**
      * Handle an incoming request.
@@ -19,7 +19,8 @@ class CheckAdmin
     public function handle($request, Closure $next)
     {
         if (Auth::check()) {
-            if (Session::get('userrole') == 1) {
+            $userrole = Session::get('userrole');
+            if ($userrole == 1 || $userrole == 2) {
                 return $next($request);
             }
             return redirect()->route('admin.home');

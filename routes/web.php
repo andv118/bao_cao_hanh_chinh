@@ -15,29 +15,33 @@ Route::group(['prefix' => '/danh-muc', 'as' => 'admin.', 'middleware' => ['check
        Route::get('trang-chu', 'BaseController@home')->name('home');
 
        /******************************* Người dùng ****************************/
-       Route::group(['prefix' => '/account', 'as' => 'account.'], function () { 
+       Route::group(['prefix' => '/account', 'as' => 'account.', 'middleware' => ['CheckAdmin']], function () { 
               /*********** Nhóm người dùng *********/
-              Route::get('quan-ly-nhom-nguoi-dung', 'AccountController@getAllGroupAccount')->name('manageGroupAccount')->middleware('CheckAdmin');
-              Route::get('them-nhom-nguoi-dung', 'AccountController@createGroupUsers')->name('createGroupUsers')->middleware('CheckAdmin');
-              Route::post('dang-ky-nhom-nguoi-dung', 'AccountController@registerGroupUser')->name('registerGroupUser')->middleware('CheckAdmin');
-              Route::post('cap-nhat-nhom-nguoi-dung', 'AccountController@updateGroupUser')->name('updateGroupUser')->middleware('CheckAdmin');
-              Route::post('xoa-nhom-nguoi-dung', 'AccountController@deleteGroupUser')->name('deleteGroupUser')->middleware('CheckAdmin');
+              Route::get('quan-ly-nhom-nguoi-dung', 'AccountController@getAllGroupAccount')->name('manageGroupAccount');
+              Route::get('them-nhom-nguoi-dung', 'AccountController@createGroupUsers')->name('createGroupUsers');
+              Route::post('dang-ky-nhom-nguoi-dung', 'AccountController@registerGroupUser')->name('registerGroupUser');
+              Route::post('cap-nhat-nhom-nguoi-dung', 'AccountController@updateGroupUser')->name('updateGroupUser');
+              Route::post('xoa-nhom-nguoi-dung', 'AccountController@deleteGroupUser')->name('deleteGroupUser');
 
               /*********** Người dùng *********/
-              Route::get('quan-ly-nguoi-dung', 'AccountController@getAllAccount')->name('manageAccount')->middleware('CheckAdmin');
-              Route::get('them-nguoi-dung', 'AccountController@createUsers')->name('createUsers')->middleware('CheckAdmin');
-              Route::post('dang-ky-nguoi-dung', 'AccountController@registerUsers')->name('registerUsers')->middleware('CheckAdmin');
-              Route::post('cap-nhat-nguoi-dung', 'AccountController@updateUser')->name('updateUser')->middleware('CheckAdmin');
-              Route::post('xoa-nguoi-dung', 'AccountController@deleteUser')->name('deleteUser')->middleware('CheckAdmin');
-              Route::post('xuat-excel-nguoi-dung', 'AccountController@exportUser')->name('exportUsers')->middleware('CheckAdmin');
+              Route::get('quan-ly-nguoi-dung', 'AccountController@getAllAccount')->name('manageAccount');
+              Route::get('them-nguoi-dung', 'AccountController@createUsers')->name('createUsers');
+              Route::post('dang-ky-nguoi-dung', 'AccountController@registerUsers')->name('registerUsers');
+              Route::post('cap-nhat-nguoi-dung', 'AccountController@updateUser')->name('updateUser');
+              Route::post('xoa-nguoi-dung', 'AccountController@deleteUser')->name('deleteUser');
+              Route::post('xuat-excel-nguoi-dung', 'AccountController@exportUser')->name('exportUsers');
 
        });
 
        /******************************* Mẫu báo cáo ****************************/
-       Route::group(['prefix' => '/mau-bao-cao', 'middleware' => ['CheckAdmin']], function () {
+       Route::group(['prefix' => '/mau-bao-cao', 'middleware' => ['CheckAdminMauBaoCao']], function () {
               Route::get('/', 'ReportController@getModelReport')->name('modelReport');
               Route::get('chi-tiet-mau-bao-cao/{maMauBaoCao}', 'ReportController@getDetailModelReport')->name('detailModelReport');
               Route::get('them-mau-bao-cao', 'ReportController@createModelReport')->name('createModelReport');
+              Route::post('create-mau-bao-cao', 'ReportController@registerModelReport')->name('registerModelReport');
+              Route::post('xoa-mau-bao-cao', 'ReportController@deleteModelReport')->name('deleteModelReport');
+              Route::post('cap-nhat-mau-bao-cao', 'ReportController@updateModelReport')->name('updateModelReport');
+
        });
 
        // Route::get('danh-sach-tai-khoan', 'BaseController@users')->name('users')->middleware('CheckAdmin');

@@ -18,6 +18,7 @@ use App\Tax;
 use App\TaxDeclaration;
 use App\Property;
 use App\Contract;
+use App\Models\MauBaoCao;
 use DB;
 
 class ReportController extends Controller
@@ -30,10 +31,51 @@ class ReportController extends Controller
      */
     public function getModelReport()
     {
-        $data = Users::all();
-        $data2 = Streets::join('users', 'users.id_street', '=', 'streets.id')->paginate(20);
+        $arrMauBaoCao = array();
+        $mauBaoCao = MauBaoCao::all();
+        // dd($mauBaoCao);
+        foreach ($mauBaoCao as $value) {
+            $capBaoCao = null;
+            if ($value->level == 1) {
+                $capBaoCao = 'Quận, Huyện, Thị Xã';
+            } elseif ($value->level == 2) {
+                $capBaoCao = 'Sở và các cơ quan ngang Sở';
+            } elseif ($value->level == 3) {
+                $capBaoCao = 'Xã, Phường, Thị Trấn';
+            } elseif ($value->level == 4) {
+                $capBaoCao = 'Ban, Ngành';
+            }
+
+            $maubaocao = null;
+            if ($value->type == 'baocao') {
+                $maubaocao = 'Mẫu báo cáo';
+                $type = 1;
+            } elseif ($value->type == 'tonghop') {
+                $maubaocao = 'Mẫu tổng hợp';
+                $type = 2;
+            }
+
+            $arrMauBaoCao[] = (object) [
+                'id'           => $value->id,
+                'type'         => $type,
+                'kieubaocao'   => $maubaocao,
+                'level'        => $value->level,
+                'capBaoCao'    => $capBaoCao,
+                'code'         => $value->code,
+                'name_phuluc'  => $value->name_phuluc,
+                'name_baocao'  => $value->name_baocao,
+                'name_ghichu'  => $value->name_ghichu,
+                'quarter_year' => $value->quarter_year,
+                'year'         => $value->year,
+            ];
+        }
+        // dd($arrMauBaoCao);
+        $data2 = Streets::join('users', 'users.role', '=', 'streets.id')->paginate(20);
         $data3 = Streets::all();
-        return view('baocao/mau-bao-cao', compact('data', 'data2', 'data3'));
+        // return view('baocao/mau-bao-cao', compact('arrMauBaoCao', 'data', 'data2', 'data3'));
+        return view('baocao/mau-bao-cao')->with('mauBaoCao', $arrMauBaoCao)
+            ->with('data2', $data2)
+            ->with('data3', $data3);
     }
 
     /**
@@ -41,12 +83,15 @@ class ReportController extends Controller
      * @param
      * @return
      */
-    public function getDetailModelReport($maMauBaoCao)
+    public function getDetailModelReport($idMauBaoCao)
     {
         $data = Users::all();
-        $data2 = Streets::join('users', 'users.id_street', '=', 'streets.id')->paginate(20);
+        $data2 = Streets::join('users', 'users.role', '=', 'streets.id')->paginate(20);
         $data3 = Streets::all();
-        return view('baocao/chi-tiet-mau-bao-cao', compact('data', 'data2', 'data3'));
+        $mauBaoCao = MauBaoCao::select('name_phuluc', 'name_baocao', 'name_ghichu')
+            ->where('id', $idMauBaoCao)
+            ->first();
+        return view('baocao/chi-tiet-mau-bao-cao', compact('mauBaoCao', 'data', 'data2', 'data3'));
     }
 
     /**
@@ -57,10 +102,154 @@ class ReportController extends Controller
     public function createModelReport()
     {
         $data = Users::all();
-        $data2 = Streets::join('users', 'users.id_street', '=', 'streets.id')->paginate(20);
+        $data2 = Streets::join('users', 'users.role', '=', 'streets.id')->paginate(20);
         $data3 = Streets::all();
         return view('baocao/them-mau-bao-cao', compact('data', 'data2', 'data3'));
     }
+
+    /**
+     * Tạo mới mẫu báo cáo
+     * @param request
+     * @return
+     */
+    public function registerModelReport(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'code' => 'required',
+                'baocao' => 'required',
+                'quy' => 'integer',
+                'year' => 'required|integer',
+            ],
+            [
+                'code.required' => 'Hãy nhập mã báo cáo',
+                'baocao.required' => 'Hãy nhập tên báo cáo',
+                'year.required' => 'Hãy nhập năm báo cáo',
+                'quy.integer' => 'Qúy nhập vào là số',
+                'year.integer' => 'Năm nhập vào là số',
+            ]
+        );
+        $error = array();
+        $code   = $request->code;
+        $type   = $request->type;
+        $kieuBaoCao = null;
+        $phuLuc = $request->phuluc;
+        $baoCao = $request->baocao;
+        $ghiChu = $request->ghichu;
+        $quy    = $request->quy;
+        $year   = $request->year;
+        $level  = $request->level;
+
+        // check error
+        if ($type == 0) {
+            $error[] = 'Hãy chọn kiểu báo cáo';
+        }
+        if ($level == 0) {
+            $error[] = 'Hãy chọn cấp báo cáo';
+        }
+
+        if ($request->type == 1) {
+            $kieuBaoCao = 'baocao';
+        } elseif ($request->type == 2) {
+            $kieuBaoCao = 'tonghop';
+        }
+
+        // dd($error);
+
+        if (sizeof($error) > 0) {
+            return redirect()->back()->with('error', $error);
+        }
+
+        $arrInsert = array(
+            'code'         => $code,
+            'type'         => $kieuBaoCao,
+            'level'        => $level,
+            'name_phuluc'  => $phuLuc,
+            'name_baocao'  => $baoCao,
+            'name_ghichu'  => $ghiChu,
+            'quarter_year' => $quy,
+            'year'         => $year,
+        );
+
+        // dd($arrInsert);
+        MauBaoCao::insert($arrInsert);
+
+        return redirect()->back()->with('success', 'Thêm mới mẫu báo cáo thành công');
+    }
+
+    /**
+     * Cập nhật mẫu báo cáo
+     * @param request
+     * @return
+     */
+    public function updateModelReport(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'code' => 'required',
+                'baocao' => 'required',
+                'quy' => 'integer',
+                'year' => 'required|integer',
+            ],
+            [
+                'code.required' => 'Hãy nhập mã báo cáo',
+                'baocao.required' => 'Hãy nhập tên báo cáo',
+                'year.required' => 'Hãy nhập năm báo cáo',
+                'quy.integer' => 'Qúy nhập vào là số',
+                'year.integer' => 'Năm nhập vào là số',
+            ]
+        );
+
+        $id = $request->id;
+        $code   = $request->code;
+        $type   = $request->type;
+        $phuLuc = $request->phuluc;
+        $baoCao = $request->baocao;
+        $ghiChu = $request->ghichu;
+        $quy    = $request->quy;
+        $year   = $request->year;
+        $level  = $request->level;
+
+        if ($request->type == 1) {
+            $type = 'baocao';
+        } elseif ($request->type == 2) {
+            $type = 'tonghop';
+        }
+
+        $arrUpdate = array(
+            'code'         => $code,
+            'type'         => $type,
+            'level'        => $level,
+            'name_phuluc'  => $phuLuc,
+            'name_baocao'  => $baoCao,
+            'name_ghichu'  => $ghiChu,
+            'quarter_year' => $quy,
+            'year'         => $year,
+        );
+        // dd($arrUpdate);
+
+        MauBaoCao::where('id', $id)
+            ->update($arrUpdate);
+        return redirect()->back()->with('success', 'Cập nhật mẫu báo cáo thành công');
+    }
+
+    /**
+     * Xóa mẫu báo cáo
+     * @param request
+     * @return
+     */
+    public function deleteModelReport(Request $request)
+    {
+        $id = $request->id;
+        MauBaoCao::where('id', $id)
+            ->delete();
+
+        return redirect()->back();
+    }
+
+
 
 
 

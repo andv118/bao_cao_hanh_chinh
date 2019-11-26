@@ -1,117 +1,7 @@
 @extends('master')
 
 @section('content')
-<script>
-    function checkValidate() {
-        var fullname = document.getElementById("fullname").value;
-        var phone = document.getElementById("phone").value;
-        var email = document.getElementById("email").value;
-        var password = document.getElementById("password").value;
-        var repassword = document.getElementById("repassword").value;
-        var role = document.getElementById("role").value;
-        var street = document.getElementById("street").value;
 
-        var status = false; //Biến trạng thái
-
-
-
-        if (fullname == "") {
-            document.getElementById("fullname").style.borderColor = "red";
-            document.getElementById("fullname").style.display = "block";
-            document.getElementById("lbfullname").innerHTML = "Hãy nhập tên chủ cán bộ";
-            status = true;
-        } else {
-
-            document.getElementById("fullname").style.borderColor = "#D8D8D8";
-            document.getElementById("lbfullname").style.display = "none";
-
-        }
-
-        if (email == "") {
-            document.getElementById("email").style.borderColor = "red";
-            document.getElementById("email").style.display = "block";
-            document.getElementById("lbemail").innerHTML = "Hãy nhập địa chỉ email";
-            status = true;
-        } else {
-
-            document.getElementById("email").style.borderColor = "#D8D8D8";
-            document.getElementById("lbemail").style.display = "none";
-
-        }
-
-        if (phone == "") {
-            document.getElementById("phone").style.borderColor = "red";
-            document.getElementById("phone").style.display = "block";
-            document.getElementById("lbphone").innerHTML = "Hãy nhập số điện thoại";
-            status = true;
-        } else {
-
-            document.getElementById("phone").style.borderColor = "#D8D8D8";
-            document.getElementById("lbphone").style.display = "none";
-
-        }
-
-        if (password == "") {
-            document.getElementById("password").style.borderColor = "red";
-            document.getElementById("password").style.display = "block";
-            document.getElementById("lbpassword").innerHTML = "Hãy nhập mật khẩu";
-            status = true;
-        } else {
-
-            document.getElementById("password").style.borderColor = "#D8D8D8";
-            document.getElementById("lbpassword").style.display = "none";
-
-        }
-
-        if (repassword == "") {
-            document.getElementById("repassword").style.borderColor = "red";
-            document.getElementById("repassword").style.display = "block";
-            document.getElementById("lbrepassword").innerHTML = "Hãy nhập lại mật khẩu";
-            status = true;
-        } else {
-
-            document.getElementById("repassword").style.borderColor = "#D8D8D8";
-            document.getElementById("lbrepassword").style.display = "none";
-
-        }
-
-        if (role == "") {
-            document.getElementById("role").style.borderColor = "red";
-            document.getElementById("role").style.display = "block";
-            document.getElementById("lbrole").innerHTML = "Hãy chọn quyền";
-            status = true;
-        } else {
-
-            document.getElementById("role").style.borderColor = "#D8D8D8";
-            document.getElementById("lbrole").style.display = "none";
-
-        }
-
-        if (street == "") {
-            document.getElementById("street").style.borderColor = "red";
-            document.getElementById("street").style.display = "block";
-            document.getElementById("lbstreet").innerHTML = "Hãy chọn phường quản lý";
-            status = true;
-        } else {
-
-            document.getElementById("street").style.borderColor = "#D8D8D8";
-            document.getElementById("lbstreet").style.display = "none";
-
-        }
-
-
-        if (status == true) {
-
-            return false;
-        } else {
-            return true;
-        }
-
-
-
-
-    }
-</script>
 <div class="panel panel-default">
     <div class="panel-heading"><b><i class="fa fa-home"></i>/Thêm mới mẫu báo cáo</b></div>
 
@@ -161,56 +51,93 @@
                         @endforeach
                     </div>
                     @endif
-                    @if(Session::has('thanhcong'))
-                    <div class="alert alert-success">{{Session::get('thanhcong')}}</div>
+                    @if(Session::has('success'))
+                    <div class="alert alert-success">{{Session::get('success')}}</div>
+                    @elseif(Session::has('error'))
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach (Session::get('error') as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                     @endif
 
-                    <form class="col-sm-8 form-horizontal col-sm-offset-2" method="post" action="{{route('admin.register')}}" onsubmit="return checkValidate();">
+                    <form class="col-sm-8 form-horizontal col-sm-offset-2" action="{{Route('admin.registerModelReport')}}" method="POST">
                         @csrf
                         <!-- Mã báo cáo -->
                         <div class="form-group">
                             <label for="mst" class="col-sm-2 control-label">1. Mã báo cáo</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="fullname" name="name" placeholder="Mã báo cáo">
+                                <input type="text" class="form-control" id="code" name="code" placeholder="Mã báo cáo">
                             </div>
-                            <div style="color: red;" id="lbfullname"></div>
+                            <div style="color: red;" id="lbcode"></div>
                         </div>
                         <!-- End Mã báo cáo -->
 
+                        <!-- Kiểu báo cáo -->
+                        <div class="form-group">
+                            <label for="mst" class="col-sm-2 control-label">2. Kiểu báo cáo</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" name="type" id="type">
+                                    <option value="0">Chọn kiểu báo cáo</option>
+                                    <option value="1">Mẫu báo cáo</option>
+                                    <option value="2">Mẫu tổng hợp</option>
+                                </select>
+                            </div>
+                            <div style="color: red;" id="lbtype"></div>
+                        </div>
+                        <!-- End Kiểu báo cáo -->
+
                         <!-- Tên công văn -->
                         <div class="form-group">
-                            <label for="phoneNumber" class="col-sm-2 control-label">2. Tên công văn</label>
+                            <label for="phoneNumber" class="col-sm-2 control-label">3. Tên công văn</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="phone" name="phone" placeholder="Tên phụ lục">
-                                <input type="text" class="form-control" id="phone" name="phone" placeholder="Tên báo cáo">
-                                <input type="text" class="form-control" id="phone" name="phone" placeholder="Ghi chú">
+                                <input type="text" class="form-control" id="phuluc" name="phuluc" placeholder="Tên phụ lục">
+                                <input type="text" class="form-control" id="baocao" name="baocao" placeholder="Tên báo cáo">
+                                <input type="text" class="form-control" id="ghichu" name="ghichu" placeholder="Ghi chú">
                             </div>
-                            <div style="color: red;" id="lbphone"></div>
-
+                            <div style="color: red;" id="lbcongvan"></div>
                         </div>
                         <!-- End Tên công văn -->
 
                         <!-- Qúy báo cáo -->
                         <div class="form-group">
-                            <label for="email" class="col-sm-2 control-label">3. Qúy báo cáo</label>
+                            <label for="email" class="col-sm-2 control-label">4. Qúy báo cáo</label>
                             <div class="col-sm-8">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Qúy báo cáo">
+                                <input type="text" class="form-control" id="quy" name="quy" placeholder="Qúy báo cáo">
                             </div>
-                            <div style="color: red;" id="lbemail"></div>
+                            <div style="color: red;" id="lbquy"></div>
                         </div>
                         <!-- End Qúy báo cáo -->
 
                         <!-- Năm báo cáo -->
                         <div class="form-group">
-                            <label for="addressTd" class="col-sm-2 control-label">4. Năm báo cáo</label>
+                            <label for="addressTd" class="col-sm-2 control-label">5. Năm báo cáo</label>
                             <div class="col-sm-8">
-                                <input type="password" name="password" id="password" class="form-control" placeholder="Năm báo cáo">
+                                <input type="text" name="year" id="year" class="form-control" placeholder="Năm báo cáo">
                             </div>
-                            <div style="color: red;" id="lbpassword"></div>
+                            <div style="color: red;" id="lbyear"></div>
                         </div>
                         <!-- End Năm báo cáo -->
 
+                        <!-- Cấp báo cáo -->
+                        <div class="form-group">
+                            <label for="mst" class="col-sm-2 control-label">6. Cấp báo cáo</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" name="level" id="level">
+                                    <option value="0">Chọn cấp báo cáo</option>
+                                    <option value="1">Cấp 1 - Quận, Huyện, Thị Xã</option>
+                                    <option value="2">Cấp 2 - Sở và các cơ quan ngang Sở</option>
+                                    <option value="3">Cấp 3 - Xã, Phường, Thị Trấn</option>
+                                </select>
+                            </div>
+                            <div style="color: red;" id="lbtype"></div>
+                        </div>
+                        <!-- End Cấp báo cáo -->
+
                         <!-- Table -->
+                        {{--
                         <div class="table-responsive">
                             <p> <label for="addressTd">5. Chọn tiêu chí</label></p>
                             <table data-toggle="table" class="table table-hover table-bordered table-responsive table-striped jambo_table bulk_action" id="content">
@@ -227,14 +154,15 @@
                                     @foreach($data2 as $v)
                                     <tr>
                                         <td colspan="1" style="text-align: center;width:10%;"> <input class="custom-control-label" type="checkbox" name="vehicle1"></td>
-                                        <td colspan="1" style="text-align: center;width:20%;">{{$v->code}}</td>
-                                        <td colspan="3" style="text-align: left;width:35%;">{{$v->name}}</td>
-                                        <td colspan="3" style="text-align: left;width:35%;">{{$v->name}}</td>
+                                        <td colspan="1" style="text-align: center;width:20%;">$v->code</td>
+                                        <td colspan="3" style="text-align: left;width:35%;">$v->name</td>
+                                        <td colspan="3" style="text-align: left;width:35%;">$v->name</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
+                        --}}
                         <!-- End table -->
 
                         <!-- Submit -->

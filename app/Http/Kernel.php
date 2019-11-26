@@ -19,7 +19,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
-       
+
     ];
 
 
@@ -62,9 +62,10 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-         'checkLogin'=>\App\Http\Middleware\checkLogin::class,
-         'checkLogout'=>\App\Http\Middleware\checkLogout::class,
-         'CheckAdmin'=>\App\Http\Middleware\CheckAdmin::class,
+        'checkLogin' => \App\Http\Middleware\checkLogin::class,
+        'checkLogout' => \App\Http\Middleware\checkLogout::class,
+        'CheckAdmin' => \App\Http\Middleware\CheckAdmin::class,
+        'CheckAdminMauBaoCao' => \App\Http\Middleware\CheckAdminMauBaoCao::class,
 
     ];
 

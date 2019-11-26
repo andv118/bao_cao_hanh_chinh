@@ -53,7 +53,9 @@
                     <!-- End Quản lý người dùng -->
 
                     <!-- Quản lý mẫu báo cáo -->
+                    @if(Session::get('userrole')==1 || Session::get('userrole')==2)
                     <li><a href="{{Route('admin.modelReport')}}"><i class="fas fa-tasks"></i> Quản lý mẫu báo cáo</a></li>
+                    @endif
                     <!-- End Quản lý mẫu báo cáo -->
 
                     <!-- Quản lý báo cáo -->

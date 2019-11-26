@@ -85,9 +85,9 @@
 
                 {{-- Title --}}
                 <div class="fixed-table-header">
-                    <h4 class="title"><b>PHỤ LỤC</b></h4>
-                    <h4 class="title"><b>BÁO CÁO KẾT QUẢ THỰC HIỆN CCHC CỦA CÁC SỞ, CƠ QUAN NGANG SỞ </b></h4>
-                    <h5 class="title"><b>(Kèm theo Báo cáo số /SNV-CCHC ngày tháng năm của Sở Nội vụ)</b></h5>
+                    <h4 class="title"><b>{{$mauBaoCao->name_phuluc}}</b></h4>
+                    <h4 class="title"><b>{{$mauBaoCao->name_baocao}}</b></h4>
+                    <h5 class="title"><b>{{$mauBaoCao->name_ghichu}}</b></h5>
                 </div>
                 {{-- End Title --}}
 
@@ -131,10 +131,10 @@
                             @foreach($data2 as $v)
                             <tr>
                                 <td colspan="1" style="text-align: center;width:5%;">{{$v->code}}</td>
-                                <td colspan="2" style="text-align: center;width:45%;">{{$v->name}}</td>
-                                <td colspan="1" style="text-align: center;width:10%;">{{$v->email}}</td>
-                                <td colspan="1" style="text-align: center;width:10%;">{{$v->phone}}</td>
-                                <td colspan="3" style="text-align: center;width:30%;">{{$v->phone}}</td>
+                                <td colspan="2" style="text-align: center;width:65%;">{{$v->name}}</td>
+                                <td colspan="1" style="text-align: center;width:5%;"></td>
+                                <td colspan="1" style="text-align: center;width:5%;"></td>
+                                <td colspan="3" style="text-align: center;width:20%;"></td>
                             </tr>
                             @endforeach
                         </tbody>
