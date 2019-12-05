@@ -1,6 +1,9 @@
 <?php
+
+use Illuminate\Support\Facades\Route;
+
 // Route::get('/', 'BaseController@userview')->name('userview');
-Route::get('/', function() {
+Route::get('/', function () {
        return redirect('login');
 });
 Route::get('thong-tin-chi-tiet-hoi/{MaHoi}', 'InfoController@thongTinChiTietHoi')->name('thong-tin-chi-tiet-hoi');
@@ -14,8 +17,20 @@ Route::get('/khao-sat', ['as' => 'khaosat', 'uses' => 'UserController@khaosat'])
 Route::group(['prefix' => '/danh-muc', 'as' => 'admin.', 'middleware' => ['checkLogin']], function () {
        Route::get('trang-chu', 'BaseController@home')->name('home');
 
+       /******************************* Danh mục hệ thống ****************************/
+       Route::group(['prefix' => '/danh-muc-he-thong', 'as' => 'danhMucHeThong.'], function () {
+              Route::get('danh-muc-hanh-chinh', 'DanhMucController@getHanhChinh')->name('hanhChinh');
+              Route::get('don-vi-tinh', 'AccountController@getAllAccount')->name('donViTinh');
+              Route::post('filter-data', 'DanhMucController@filterData')->name('filter');
+              Route::post('search', 'DanhMucController@searchData')->name('search');
+              Route::get('don-vi-tinh', 'DanhMucController@getDonViTinh')->name('donViTinh');
+              Route::post('delete-don-vi-tinh', 'DanhMucController@deleteDonViTinh')->name('deleteDonViTinh');
+              Route::post('update-don-vi-tinh', 'DanhMucController@updateDonViTinh')->name('updateDonViTinh');
+              Route::post('add-don-vi-tinh', 'DanhMucController@addDonViTinh')->name('addDonViTinh');
+       });
+
        /******************************* Người dùng ****************************/
-       Route::group(['prefix' => '/account', 'as' => 'account.', 'middleware' => ['CheckAdmin']], function () { 
+       Route::group(['prefix' => '/account', 'as' => 'account.', 'middleware' => ['CheckAdmin']], function () {
               /*********** Nhóm người dùng *********/
               Route::get('quan-ly-nhom-nguoi-dung', 'AccountController@getAllGroupAccount')->name('manageGroupAccount');
               Route::get('them-nhom-nguoi-dung', 'AccountController@createGroupUsers')->name('createGroupUsers');
@@ -30,7 +45,6 @@ Route::group(['prefix' => '/danh-muc', 'as' => 'admin.', 'middleware' => ['check
               Route::post('cap-nhat-nguoi-dung', 'AccountController@updateUser')->name('updateUser');
               Route::post('xoa-nguoi-dung', 'AccountController@deleteUser')->name('deleteUser');
               Route::post('xuat-excel-nguoi-dung', 'AccountController@exportUser')->name('exportUsers');
-
        });
 
        /******************************* Mẫu báo cáo ****************************/
@@ -42,6 +56,10 @@ Route::group(['prefix' => '/danh-muc', 'as' => 'admin.', 'middleware' => ['check
               Route::post('xoa-mau-bao-cao', 'ReportController@deleteModelReport')->name('deleteModelReport');
               Route::post('cap-nhat-mau-bao-cao', 'ReportController@updateModelReport')->name('updateModelReport');
 
+              // danh muc va tieu chi
+              Route::get('danh-muc-va-tieu-chi', 'DanhMucTieuChiController@index')->name('danhMucTieuChi');
+              Route::post('xoa-danh-muc-va-tieu-chi', 'DanhMucTieuChiController@delete')->name('deleteDanhMucTieuChi');
+              Route::post('view-update-danh-muc-va-tieu-chi', 'DanhMucTieuChiController@getViewUpdate')->name('viewUpdateDanhMucTieuChi');
        });
 
        // Route::get('danh-sach-tai-khoan', 'BaseController@users')->name('users')->middleware('CheckAdmin');

@@ -35,8 +35,8 @@
                     <!-- Quản lý danh mục hệ thống -->
                     <li><a><i class="fab fa-centos"></i> Danh mục hệ thống <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="#">Đơn vị tính</a></li>
-                            <li><a href="#">Danh mục hành chính </a></li>
+                            <li><a href="{{Route('admin.danhMucHeThong.donViTinh')}}">Đơn vị tính</a></li>
+                            <li><a href="{{Route('admin.danhMucHeThong.hanhChinh')}}">Danh mục hành chính </a></li>
                         </ul>
                     </li>
                     <!-- End Quản lý danh mục hệ thống -->
@@ -54,7 +54,12 @@
 
                     <!-- Quản lý mẫu báo cáo -->
                     @if(Session::get('userrole')==1 || Session::get('userrole')==2)
-                    <li><a href="{{Route('admin.modelReport')}}"><i class="fas fa-tasks"></i> Quản lý mẫu báo cáo</a></li>
+                    <li><a><i class="fas fa-tasks"></i> Quản lý mẫu báo cáo <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="{{Route('admin.modelReport')}}">Mẫu báo cáo</a></li>
+                            <li><a href="{{Route('admin.danhMucTieuChi')}}">Danh mục & tiêu chí</a></li>
+                        </ul>
+                    </li>
                     @endif
                     <!-- End Quản lý mẫu báo cáo -->
 

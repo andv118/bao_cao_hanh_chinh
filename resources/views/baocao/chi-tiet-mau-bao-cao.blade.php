@@ -117,10 +117,8 @@
                     <table data-toggle="table" class="table table-hover table-bordered table-responsive table-striped jambo_table bulk_action" id="content">
                         <thead>
                             <tr>
-                                <th colspan="1" style="text-align: center; vertical-align:middle">TT</th>
                                 <th colspan="2" style="text-align: center; vertical-align:middle">Nội dung báo cáo của
                                     đơn vị</th>
-                                <th colspan="1" style="text-align: center; vertical-align:middle">Số lượng</th>
                                 <th colspan="1" style="text-align: center; vertical-align:middle">Đơn vị tính</th>
                                 <th colspan="3" style="text-align: center; vertical-align:middle">Giải trình/tên văn
                                     bản, số ký hiệu, ngày tháng năm ban hành văn bản/tài liệu đính kèm</th>
@@ -128,14 +126,39 @@
 
                         </thead>
                         <tbody>
-                            @foreach($data2 as $v)
+                            @foreach($listTieuChi as $v)
                             <tr>
-                                <td colspan="1" style="text-align: center;width:5%;">{{$v->code}}</td>
-                                <td colspan="2" style="text-align: center;width:65%;">{{$v->name}}</td>
-                                <td colspan="1" style="text-align: center;width:5%;"></td>
-                                <td colspan="1" style="text-align: center;width:5%;"></td>
+                                <td colspan="2" style="text-align: left;font-weight:bold ;font-size:15px; width:70%;"><?php echo $v['stt'] . ": " . $v['title'] ?></td>
+                                <td colspan="1" style="text-align: center;width:10%;"></td>
                                 <td colspan="3" style="text-align: center;width:20%;"></td>
                             </tr>
+
+                            @if($v['tieuchi'] != null)
+                                @foreach($v['tieuchi'] as $tieuchi)
+                                <tr>
+                                    <td colspan="2" style="text-align: left;width:70%;">
+                                        <?php
+                                        $char = null;
+                                        if($tieuchi['position'] == 0) {
+                                            $char = '- ';
+                                        } elseif($tieuchi['position'] == 1) {
+                                            $char = '+ ';
+                                        } elseif($tieuchi['position'] == 2) {
+                                            $char = '. ';
+                                        } elseif($tieuchi['position'] == 3) {
+                                            $char = '.. ';
+                                        } elseif($tieuchi['position'] == 4) {
+                                            $char = '... ';
+                                        }
+                                        echo str_repeat('&nbsp;&nbsp;&nbsp;', $tieuchi['position']). $char . $tieuchi['title'] 
+                                        ?>
+                                    </td>
+                                    <td colspan="1" style="text-align: center;width:10%;">{{$tieuchi['unit']}}</td>   
+                                    <td colspan="3" style="text-align: center;width:20%;"></td>
+                                </tr>
+                                @endforeach
+                            @endif
+
                             @endforeach
                         </tbody>
                     </table>

@@ -18,7 +18,9 @@ use App\Tax;
 use App\TaxDeclaration;
 use App\Property;
 use App\Contract;
+use App\Models\DanhMuc;
 use App\Models\MauBaoCao;
+use App\Models\TieuChi;
 use DB;
 
 class ReportController extends Controller
@@ -91,8 +93,48 @@ class ReportController extends Controller
         $mauBaoCao = MauBaoCao::select('name_phuluc', 'name_baocao', 'name_ghichu')
             ->where('id', $idMauBaoCao)
             ->first();
-        return view('baocao/chi-tiet-mau-bao-cao', compact('mauBaoCao', 'data', 'data2', 'data3'));
+
+        $listDanhMuc = DanhMuc::get()->toArray();
+        $danhMuc = new DanhMuc();
+        $listDanhMuc = $danhMuc->getTreeData($listDanhMuc, 0, null);
+
+        $listTieuChi = TieuChi::get()->toArray();
+        $tieuChi = new TieuChi();
+        $listTieuChi = $tieuChi->getTreeData($listTieuChi, 0, null);
+
+        $listTieuChi = $tieuChi->mergerTieuChi($listDanhMuc, $listTieuChi);
+        // dd($listTieuChi);
+
+        return view('baocao/chi-tiet-mau-bao-cao', compact('mauBaoCao', 'listDanhMuc', 'listTieuChi', 'data', 'data2', 'data3'));
     }
+
+    /**
+     * Kết hợp tiêu chí vào danh mục
+     * @param array $listDanhMuc
+     * @param array $listTieuChi
+     * @return array $result
+     */
+    public function mergerTieuChi($listDanhMuc, $listTieuChi) {
+        $result = array();
+
+        foreach($listDanhMuc as $danhMuc) {
+            $arrTieuChi = array();
+            foreach($listTieuChi as $keyTC=>$tieuChi) {
+                if($tieuChi['danh_muc'] == $danhMuc['id']) {
+                    $arrTieuChi[] = $tieuChi;
+                    unset($listTieuChi[$keyTC]);
+                }
+            }
+
+            if(sizeOf($arrTieuChi) == 0) {
+                $arrTieuChi = null;
+            }
+            $danhMuc['tieuchi'] = $arrTieuChi;
+            $result[] = $danhMuc;
+        }
+        return $result;
+    }
+
 
     /**
      * Thêm mẫu báo cáo
